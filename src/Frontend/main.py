@@ -1,12 +1,7 @@
 import streamlit as st
-# import cv2
-from PIL import Image
-import io
-import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
 import time
-from src.Frontend.util import *
+from util import *
+
 
 st.set_page_config(page_title="Neural Style Transfer",layout="wide")
 
@@ -35,10 +30,8 @@ with col2:
 if style_image and content_image:
     
     col1, col2, col3 = st.columns([1,.5,1])
-    id=upload_images(style_image,content_image)
-    
+        
     with col2:
-        placeholder_loading = st.empty()
         placeholder_predict = st.empty()
         
         predict = st.button("Generate Output of given images")
@@ -46,42 +39,24 @@ if style_image and content_image:
         
     if predict:
         try:
+            id=upload_images(style_image,content_image)
+        except Exception as E:
+            print(E)
+            st.error("An unexpected error occured")
+        try:
             placeholder_predict.empty()
-            placeholder_loading.image("./src/Frontend/assets/loading.gif")
             output_image=predict_output(id)
         except Exception as E:
             st.write(E)    
 
-    # ouput=input_to_ouput(style_image,content_image,"image")
-    
-    # display output image
-    
-    # simulating above operations  
-    # time.sleep(10)
-        placeholder_loading.empty()
         with col2:
             st.markdown("\n")
             st.markdown(
             "<h2 style='text-align: center;'>Output Image</h2>",
             unsafe_allow_html=True,
         )
-            # output_image = np.random.randint(0, 255, (224, 224, 3), dtype=np.uint8)
-            st.image(output_image,caption="Output Image",width=300)
-        
-            pil_img = Image.fromarray(output_image)
-            buf = io.BytesIO()
-            pil_img.save(buf, format="PNG")
-            byte_img = buf.getvalue()
-
-            col1_,col2_,col3_=st.columns([1,3,1])
             
-            with col2_:
-                st.download_button(
-                label="Download Image ",
-                data=byte_img,
-                file_name="output.png",
-                mime="image/png"
-                )
+            st.image(output_image,caption="Output Image")
             
             
 st.markdown(
@@ -101,28 +76,14 @@ with col2:
 if style_image and content_video:
     
     col1, col2, col3 = st.columns([1,.5,1])
-    with col2:
-        placeholder = st.empty()
-        placeholder.image("./src/Frontend/assets/loading.gif")
     
-    # output=input_to_output(style_image,content_video,"video")
-        
-    placeholder.empty()
+    id=upload_video(style_image,content_video)
+    output=predict_output_video(id)
+      
     with col2:
         st.markdown("\n")
         st.markdown(
         "<h2 style='text-align: center;'>Output Video</h2>",
         unsafe_allow_html=True,
     )
-        st.video(output_image,caption="Output Video",width=300)
-    
-
-        col1_,col2_,col3_=st.columns([1,3,1])
-        
-        with col2_:
-            st.download_button(
-            label="Download Image ",
-            data=byte_img,
-            file_name="output.mp4",
-            mime="video/mp4"
-            )
+        st.video(output, format="video/mp4")
