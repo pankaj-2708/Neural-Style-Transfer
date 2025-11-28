@@ -2,7 +2,7 @@ from PIL import Image
 import requests
 import base64
 
-backend_uri = "http://localhost:8000/"
+backend_uri = "http://16.16.78.98/:8000/"
 
 
 def predict_output(id):
