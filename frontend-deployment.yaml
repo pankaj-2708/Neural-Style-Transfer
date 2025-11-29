@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nst-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nst-frontend
+  template:
+    metadata:
+      labels:
+        app: nst-frontend
+    spec:
+      containers:
+      - name: nst-frontend
+        image: pankajmaulekhi/nst_frontend
+        resources:
+          limits:
+            memory: "400Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8501
